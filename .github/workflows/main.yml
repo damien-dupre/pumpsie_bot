@@ -1,9 +1,10 @@
 name: pumpsie_bot
 
 on:
+  workflow_dispatch:
   schedule:
     - cron:  '0 10 * * *'
-  workflow_dispatch:
+
 
 jobs:
   pumpsie_bot-post:
