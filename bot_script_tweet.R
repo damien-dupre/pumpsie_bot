@@ -20,6 +20,7 @@ api_call <- function(url) {
   df <- resp |> 
     filter(as.Date(dateupdated) == Sys.Date() - 1) |> 
     group_by(fuel) |> 
+    filter(abs(price) < mean(price, na.rm = TRUE) + sd(price, na.rm = TRUE)) |> 
     summarise(
       n_report = n(),
       m_price = mean(price, na.rm = TRUE) |> round(1)
