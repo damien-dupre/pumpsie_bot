@@ -30,23 +30,23 @@ df <-
   summarise(api_call(url))
 
 lowest <- df |> 
-  filter(price < 500 & dateupdated > (Sys.Date()-10)) |> 
+  filter(price < 500 & dateupdated > (Sys.Date() - 10)) |> 
   slice_min(price)
 
 library(ggrepel)
 
 df |> 
-  filter(price < 500 & dateupdated > (Sys.Date()-10)) |> 
+  filter(price < 500 & dateupdated > (Sys.Date() - 10)) |> 
   ggplot(aes(dateupdated, price, color = fuel)) +
   geom_jitter(alpha = 0.5) +
   geom_smooth(method = "loess", formula = "y ~ x")
 
 df |> 
-  filter(price < 500 & dateupdated > (Sys.Date()-10)) |> 
+  filter(price < 500 & dateupdated > (Sys.Date() - 10)) |> 
   ggplot(aes(dateupdated, price, color = fuel)) +
-  geom_jitter(alpha = 0.5) +
+  geom_point(alpha = 0.5) +
   geom_smooth(method = "loess", formula = "y ~ x") +
-  geom_label_repel(data = lowest, aes(label = name)) +
+  geom_text_repel(data = lowest, aes(label = name), max.overlaps = Inf) +
   labs(
     title = "Reported price of Petrol/Diesel in Co. Dublin in the last 10 days",
     caption = "Source: pumps.ie/@damien-dupre",
