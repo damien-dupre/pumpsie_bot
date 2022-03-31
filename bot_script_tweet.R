@@ -15,7 +15,11 @@ api_call <- function(url) {
     xml_find_all("//station") |> 
     xml_attrs() %>%
     map_df(~as.list(.)) |> 
-    mutate(price = as.numeric(price)) 
+    mutate(price = as.numeric(price))
+  
+  df_2_days <- resp |> 
+    filter(as.Date(dateupdated) == Sys.Date() - 2) |> 
+    filter(abs(price) < mean(price, na.rm = TRUE) + sd(price, na.rm = TRUE))
   
   df <- resp |> 
     filter(as.Date(dateupdated) == Sys.Date() - 1) |> 
@@ -26,7 +30,7 @@ api_call <- function(url) {
       m_price = mean(price, na.rm = TRUE) |> round(1)
     ) |> 
     mutate(
-      perc_change = ((m_price - mean(filter(resp, as.Date(dateupdated) == Sys.Date() - 2)$price, na.rm = TRUE))/mean(filter(resp, as.Date(dateupdated) == Sys.Date() - 2)$price, na.rm = TRUE)) |> percent(0.1),
+      perc_change = ((m_price - mean(df_2_days$price, na.rm = TRUE))/mean(df_2_days$price, na.rm = TRUE)) |> percent(0.1),
       text = glue("{n_report} {fuel} prices (avg:{m_price}, change: {perc_change})")
     )
 }
