@@ -89,7 +89,7 @@ province_title <- unique(df$province)[1]
 lowest <- df |> 
   group_by(fuel) |> 
   slice_max(dateupdated, with_ties = TRUE) |> 
-  slice_min(price, with_ties = TRUE)
+  slice_min(price, with_ties = FALSE)
 
 wti_last_month <- "https://www.marketwatch.com/investing/future/cl.1/downloaddatapartial?csvdownload=true" |> 
   read_csv(col_types = list(col_date(format = "%m/%d/%Y"))) |> 
@@ -105,17 +105,18 @@ oil_df <- bind_rows(wti_last_month, brent_last_month) |>
 # visualisation ----------------------------------------------------------------
   ggplot(df) +
   geom_textline(data = oil_df, aes(Date, ((Close + 20) / 70), linetype = type, label = type), color = "gray50", family = "serif") +
-  geom_point(aes(dateupdated, price / 100, color = fuel), alpha = 0.5, size = 2) +
+  geom_point(aes(dateupdated, price / 100, color = fuel), alpha = 0.3, size = 1) +
   geom_labelsmooth(aes(dateupdated, price / 100, color = fuel, label = fuel), method = "loess", formula = "y ~ x", text_smoothing = 30, fill = "#F6F6FF", size = 4, linewidth = 1, boxlinewidth = 0.3) +
   geom_text_repel(data = oil_df |> group_by(type) |> slice_max(Date, with_ties = FALSE), aes(Date, ((Close + 20) / 70), label = dollar(Close, accuracy = 1)), hjust = 0, direction = "y", size = 3, force = 0.5, family = "serif", color = "gray30") +
   geom_text_repel(data = oil_df |> group_by(type) |> slice_min(Date, with_ties = FALSE), aes(Date, ((Close + 20) / 70), label = dollar(Close, accuracy = 1)), hjust = 1, direction = "y", size = 3, force = 0.5, family = "serif", color = "gray30") +
-  geom_text_repel(data = lowest, aes(dateupdated, price / 100, label = paste(name, addr2, dollar(price / 100, prefix = "€")), color = fuel), hjust = -1, direction = "y") +
+  geom_text_repel(data = lowest, aes(dateupdated, price / 100, label = paste(addr2, dollar(price / 100, prefix = "€")), color = fuel), hjust = -1, direction = "y", fontface = "bold") +
   scale_y_continuous(labels = dollar_format(prefix = "€")) + 
   scale_linetype_manual(values = c("twodash", "dotted")) +
   scale_color_manual(values = c("#D0BE24", "#549B8C")) +
+  expand_limits(x = Sys.Date() + 1) +
   labs(
     title = glue("Reported prices of <span style='color:#D0BE24;'>Diesel</span> and <span style='color:#549B8C;'>Petrol</span> in {province_title} in the last 14 days"),
-    subtitle = "Station names correspond to the lowest prices recently reported, Brent and WTI stock prices added for information",
+    subtitle = "Station names correspond to the lowest prices recently reported, Brent and WTI stock prices for information",
     caption = "Source: pumps.ie/@damien-dupre",
     x = "",
     y = "Fuel Price"
