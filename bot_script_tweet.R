@@ -1,8 +1,8 @@
 # libraries --------------------------------------------------------------------
 library(glue)
 library(httr2)
-library(scales)
 library(rtweet)
+library(scales)
 library(tidyverse)
 library(xml2)
 
