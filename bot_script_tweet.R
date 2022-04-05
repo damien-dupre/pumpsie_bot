@@ -11,7 +11,7 @@ api_call <- function(url) {
   requ <- request(url) |> 
     req_perform()
   
-  resp <- resp_body_xml(requ) |> 
+  resp <- resp_body_xml(requ, encoding = "windows-1252") |> 
     xml_find_all("//station") |> 
     xml_attrs() %>%
     map_df(~as.list(.)) |> 
