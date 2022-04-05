@@ -103,12 +103,13 @@ oil_df <- bind_rows(wti_last_month, brent_last_month) |>
   filter(Date > (Sys.Date() - 14))
 
 # visualisation ----------------------------------------------------------------
-  ggplot(df) +
-  geom_textline(data = oil_df, aes(Date, ((Close + 20) / 70), linetype = type, label = type), color = "gray50", family = "serif") +
+df |> 
+  ggplot() +
+  geom_textline(data = oil_df, aes(Date, ((Close + 20) / 70), linetype = type, label = type), color = "gray50", family = "serif", hjust = 0.03) +
   geom_point(aes(dateupdated, price / 100, color = fuel), alpha = 0.3, size = 1) +
-  geom_labelsmooth(aes(dateupdated, price / 100, color = fuel, label = fuel), method = "loess", formula = "y ~ x", text_smoothing = 30, fill = "#F6F6FF", size = 4, linewidth = 1, boxlinewidth = 0.3) +
-  geom_text_repel(data = oil_df |> group_by(type) |> slice_max(Date, with_ties = FALSE), aes(Date, ((Close + 20) / 70), label = dollar(Close, accuracy = 1)), hjust = 0, direction = "y", size = 3, force = 0.5, family = "serif", color = "gray30") +
-  geom_text_repel(data = oil_df |> group_by(type) |> slice_min(Date, with_ties = FALSE), aes(Date, ((Close + 20) / 70), label = dollar(Close, accuracy = 1)), hjust = 1, direction = "y", size = 3, force = 0.5, family = "serif", color = "gray30") +
+  geom_labelsmooth(aes(dateupdated, price / 100, color = fuel, label = fuel), method = "loess", formula = "y ~ x", text_smoothing = 30, fill = "#F6F6FF", size = 4, linewidth = 1, boxlinewidth = 0.3, hjust = 0.8) +
+  geom_text_repel(data = oil_df |> group_by(type) |> slice_max(Date), aes(Date, ((Close + 20) / 70), label = dollar(Close, accuracy = 1)), hjust = -1, direction = "y", size = 3, force = 0.5, family = "serif", color = "gray30") +
+  geom_text_repel(data = oil_df |> group_by(type) |> slice_min(Date), aes(Date, ((Close + 20) / 70), label = dollar(Close, accuracy = 1)), hjust = 1, direction = "y", size = 3, force = 0.5, family = "serif", color = "gray30") +
   geom_text_repel(data = lowest, aes(dateupdated, price / 100, label = paste(addr2, dollar(price / 100, prefix = "€")), color = fuel), hjust = -1, direction = "y", fontface = "bold") +
   scale_y_continuous(labels = dollar_format(prefix = "€")) + 
   scale_linetype_manual(values = c("twodash", "dotted")) +
