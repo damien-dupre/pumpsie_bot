@@ -6,8 +6,13 @@ library(glue)
 library(httr2)
 library(rtweet)
 library(scales)
+library(showtext)
 library(tidyverse)
 library(xml2)
+
+# options in -------------------------------------------------------------------
+font_add_google("Roboto Condensed", "Roboto Condensed")
+showtext_auto()
 
 # functions --------------------------------------------------------------------
 api_call <- function(url) {
@@ -125,11 +130,15 @@ df |>
   theme_bw() +
   theme(
     legend.position = "none",
-    plot.title = element_markdown(lineheight = 1)
+    plot.title = element_markdown(lineheight = 1),
+    text = element_text(size = 20)
   )
 
 ggsave("pumps.png", width = 8, height = 4)
 
+# tweet ------------------------------------------------------------------------
 post_tweet(glue("Fluctuation of fuel prices reported on pumps.ie in #{province_title} for the last 2 weeks. #Ireland #Petrol #Diesel #FuelPrice"), media = "pumps.png", token = bot_token)
 
+# options out ------------------------------------------------------------------
 unlink("pumps.png")
+showtext_auto(FALSE)
