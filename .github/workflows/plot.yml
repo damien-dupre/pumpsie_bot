@@ -3,7 +3,7 @@ name: pumpsie_plot
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '0 15 * * *'
+    - cron:  '0 15 * * 2-5'
 
 
 jobs:

@@ -78,10 +78,16 @@ pumps_county_df <-
     "Leinster", "Westmeath", 53.12122943574266, 53.929411303402084, -8.05023193359375, -6.83074951171875,
     "Leinster", "Wexford", 52.292522517043615, 52.70634714950863, -6.87469482421875, -6.26495361328125,
     "Leinster", "Wicklow", 52.78324644967133, 53.19245885638094, -6.646728515625, -6.0369873046875
-  )
+  ) |> 
+  mutate(day = case_when(
+    province == "Connaught" ~ "Tuesday",
+    province == "Leinster" ~ "Wednesday",
+    province == "Munster" ~ "Thursday",
+    province == "Ulster (IE)" ~ "Friday",
+  ))
 
 df <- pumps_county_df |> 
-  filter(province == sample(c("Connaught", "Leinster", "Munster", "Ulster (IE)"), 1)) |> 
+  filter(day == format(Sys.time(), "%A")) |> 
   expand_grid(fuel = c("Diesel", "Petrol")) |> 
   mutate(url = glue("https://pumps.ie/api/getStationsByPriceAPI.php?county={county}&minLat={minLat}&maxLat={maxLat}&minLng={minLng}&maxLng={maxLng}&fuel={fuel}")) |> 
   group_by(province, county, fuel) |> 
@@ -110,16 +116,16 @@ oil_df <- bind_rows(wti_last_month, brent_last_month) |>
 # visualisation ----------------------------------------------------------------
 df |> 
   ggplot() +
-  geom_textline(data = oil_df, aes(Date, ((Close + 20) / 70), linetype = type, label = type), color = "gray50", family = "serif", hjust = 0.03) +
+  geom_textline(data = oil_df, aes(Date, ((Close + 20) / 70), linetype = type, label = type), color = "gray50", family = "serif", hjust = 0.08, size = 5) +
   geom_point(aes(dateupdated, price / 100, color = fuel), alpha = 0.3, size = 1) +
-  geom_labelsmooth(aes(dateupdated, price / 100, color = fuel, label = fuel), method = "loess", formula = "y ~ x", text_smoothing = 30, fill = "#F6F6FF", size = 4, linewidth = 1, boxlinewidth = 0.3, hjust = 0.8) +
-  geom_text_repel(data = oil_df |> group_by(type) |> slice_max(Date), aes(Date, ((Close + 20) / 70), label = dollar(Close, accuracy = 1)), hjust = -1, direction = "y", size = 3, force = 0.5, family = "serif", color = "gray30") +
-  geom_text_repel(data = oil_df |> group_by(type) |> slice_min(Date), aes(Date, ((Close + 20) / 70), label = dollar(Close, accuracy = 1)), hjust = 1, direction = "y", size = 3, force = 0.5, family = "serif", color = "gray30") +
-  geom_text_repel(data = lowest, aes(dateupdated, price / 100, label = paste(addr2, dollar(price / 100, prefix = "€")), color = fuel), hjust = -1, direction = "y", fontface = "bold") +
+  geom_labelsmooth(aes(dateupdated, price / 100, color = fuel, label = fuel), method = "loess", formula = "y ~ x", text_smoothing = 30, fill = "#F6F6FF", size = 5, linewidth = 1, boxlinewidth = 0.3, hjust = 0.8) +
+  geom_text_repel(data = oil_df |> group_by(type) |> slice_max(Date), aes(Date, ((Close + 20) / 70), label = dollar(Close, accuracy = 1)), hjust = -1, direction = "y", size = 4, force = 0.5, family = "serif", color = "gray30") +
+  geom_text_repel(data = oil_df |> group_by(type) |> slice_min(Date), aes(Date, ((Close + 20) / 70), label = dollar(Close, accuracy = 1)), hjust = 1, direction = "y", size = 4, force = 0.5, family = "serif", color = "gray30") +
+  geom_text_repel(data = lowest, aes(dateupdated, price / 100, label = paste(addr2, dollar(price / 100, prefix = "€")), color = fuel), hjust = -1, direction = "y", fontface = "bold", size = 6) +
   scale_y_continuous(labels = dollar_format(prefix = "€")) + 
   scale_linetype_manual(values = c("twodash", "dotted")) +
   scale_color_manual(values = c("#D0BE24", "#549B8C")) +
-  expand_limits(x = Sys.Date() + 1) +
+  expand_limits(x = Sys.Date()) +
   labs(
     title = glue("Reported prices of <span style='color:#D0BE24;'>Diesel</span> and <span style='color:#549B8C;'>Petrol</span> in {province_title} in the last 14 days"),
     subtitle = "Station names correspond to the lowest prices recently reported, Brent and WTI stock prices for information",
