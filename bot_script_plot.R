@@ -138,7 +138,7 @@ df |>
   theme(
     legend.position = "none",
     plot.title = element_markdown(lineheight = 1),
-    text = element_text(size = 20)
+    text = element_text(size = 14)
   )
 
 ggsave("pumps.png", width = 8, height = 4)
