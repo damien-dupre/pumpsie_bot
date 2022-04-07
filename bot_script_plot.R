@@ -130,7 +130,7 @@ df |>
   labs(
     title = glue("Reported prices of <span style='color:#D0BE24;'>Diesel</span> and <span style='color:#549B8C;'>Petrol</span> in {province_title} in the last 14 days"),
     subtitle = "Station names correspond to the lowest prices recently reported, Brent and WTI stock prices for information",
-    caption = "Source: pumps.ie/@damien-dupre",
+    caption = "Source: pumps.ie/@damien_dupre",
     x = "",
     y = "Fuel Price"
   ) +
