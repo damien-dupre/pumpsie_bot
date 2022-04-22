@@ -6,6 +6,9 @@ library(scales)
 library(tidyverse)
 library(xml2)
 
+# options in -------------------------------------------------------------------
+options(encoding = "windows-1252")
+
 # functions --------------------------------------------------------------------
 api_call <- function(url) {
   requ <- request(url) |> 

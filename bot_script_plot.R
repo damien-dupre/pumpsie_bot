@@ -11,6 +11,7 @@ library(tidyverse)
 library(xml2)
 
 # options in -------------------------------------------------------------------
+options(encoding = "windows-1252")
 font_add_google("Roboto Condensed", "Roboto Condensed")
 showtext_auto()
 
