@@ -102,7 +102,14 @@ df <- pumps_county_df |>
   ) |> 
   filter(county_check == TRUE) |> 
   filter(dateupdated > (Sys.Date() - 14) & dateupdated < Sys.Date()) |>
-  filter(price < 500 & price > 130) |> 
+  group_by(fuel) |> 
+  mutate(
+    c1 = quantile(price, prob = 0.01),
+    c99 = quantile(price, prob = 0.99)
+  ) |> 
+  rowwise() |> 
+  filter(between(price, c1, c99)) |> 
+  ungroup() |> 
   distinct(ID, dateupdated, fuel, .keep_all = TRUE)
 
 province_title <- 
