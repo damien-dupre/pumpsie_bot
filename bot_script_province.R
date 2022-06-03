@@ -125,6 +125,7 @@ df |>
   ) +
   labs(
     title = "Reported prices of <span style='color:#D0BE24;'>Diesel</span> and <span style='color:#549B8C;'>Petrol</span> by Irish province in the last 30 days",
+    subtitle = "Note: a lack of data points can lead to unrealistic changes in the non-linear approximation",
     caption = "Source: pumps.ie/@damien_dupre",
     x = "",
     y = "Fuel Price",
