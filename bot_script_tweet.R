@@ -1,25 +1,15 @@
 # libraries --------------------------------------------------------------------
 library(glue)
-library(httr2)
+library(here)
 library(rtweet)
 library(scales)
 library(tidyverse)
-library(xml2)
 
 # options in -------------------------------------------------------------------
 options(encoding = "windows-1252")
 
 # functions --------------------------------------------------------------------
 api_call <- function(url) {
-  requ <- request(url) |> 
-    req_perform()
-  
-  resp <- resp_body_xml(requ, encoding = "windows-1252") |> 
-    xml_find_all("//station") |> 
-    xml_attrs() %>%
-    map_df(~as.list(.)) |> 
-    mutate(price = as.numeric(price))
-  
   df_2_days <- resp |> 
     filter(as.Date(dateupdated) == Sys.Date() - 2) |> 
     filter(abs(price) < mean(price, na.rm = TRUE) + sd(price, na.rm = TRUE))
@@ -58,15 +48,25 @@ bot_token <-
     set_renv = FALSE
   )
 
-tribble(
-  ~county, ~fuel, ~url,
-  "Dublin", "petrol", "https://pumps.ie/api/getStationsByPriceAPI.php?county=Dublin&minLat=53.23624942625596&maxLat=53.43919600129776&minLng=-6.4290618896484375&maxLng=-6.1241912841796875&fuel=petrol&noCache=2.0784268063901865",
-  "Dublin", "diesel", "https://pumps.ie/api/getStationsByPriceAPI.php?county=Dublin&minLat=53.23624942625596&maxLat=53.43919600129776&minLng=-6.4290618896484375&maxLng=-6.1241912841796875&fuel=diesel&noCache=2.0784268063901865",
-  "Cork", "petrol", "https://pumps.ie/api/getStationsByPriceAPI.php?county=Cork&minLat=51.55402061770002&maxLat=52.391525337232224&minLng=-9.349365234375&maxLng=-8.1298828125&fuel=petrol&noCache=1.68899746901723",
-  "Cork", "diesel", "https://pumps.ie/api/getStationsByPriceAPI.php?county=Cork&minLat=51.55402061770002&maxLat=52.391525337232224&minLng=-9.349365234375&maxLng=-8.1298828125&fuel=diesel&noCache=1.68899746901723"
-) |> 
+data_latest <- read_csv(here(glue("data/pumpsie_{Sys.Date()}.csv"))) |> 
+  filter(county %in% c("Dublin", "Cork"))
+
+df_2_days <- data_latest |> 
+  filter(as.Date(dateupdated) == Sys.Date() - 2) |> 
+  filter(abs(price) < mean(price, na.rm = TRUE) + sd(price, na.rm = TRUE))
+
+df <- data_latest |> 
+  filter(as.Date(dateupdated) == Sys.Date() - 1) |> 
   group_by(county, fuel) |> 
-  summarise(api_call(url)) |> 
+  filter(abs(price) < mean(price, na.rm = TRUE) + sd(price, na.rm = TRUE)) |> 
+  summarise(
+    n_report = n(),
+    m_price = mean(price, na.rm = TRUE) |> round(1)
+  ) |> 
+  mutate(
+    perc_change = ((m_price - mean(df_2_days$price, na.rm = TRUE))/mean(df_2_days$price, na.rm = TRUE)) |> percent(0.1),
+    text = glue("{n_report} {fuel} prices (avg:{m_price}, change: {perc_change})")
+  ) |> 
   select(county, fuel, text) |> 
   group_by(county) |>
   pivot_wider(names_from = fuel, values_from = text) |> 
@@ -74,4 +74,3 @@ tribble(
   paste(collapse = "\n") |> 
   paste(" #Ireland", sep = "\n") |> 
   post_tweet(token = bot_token)
-
