@@ -22,26 +22,6 @@ api_call <- function(url) {
     )
 }
 
-# twitter ----------------------------------------------------------------------
-# bot_token <-
-# rtweet::create_token(
-#   app = "pumpsie_bot",
-#   consumer_key = config::get("pumpsie_bot")$api_key,
-#   consumer_secret = config::get("pumpsie_bot")$api_key_secret,
-#   access_token = config::get("pumpsie_bot")$access_token,
-#   access_secret = config::get("pumpsie_bot")$access_token_secret
-# )
-
-bot_token <- 
-  create_token(
-    app = "pumpsie_bot",
-    consumer_key = Sys.getenv("TWITTER_CONSUMER_API_KEY"),
-    consumer_secret = Sys.getenv("TWITTER_CONSUMER_API_SECRET"),
-    access_token = Sys.getenv("TWITTER_ACCESS_TOKEN"),
-    access_secret = Sys.getenv("TWITTER_ACCESS_TOKEN_SECRET"),
-    set_renv = FALSE
-  )
-
 # data -------------------------------------------------------------------------
 pumps_county_df <- 
   tribble(
