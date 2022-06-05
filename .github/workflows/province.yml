@@ -20,12 +20,11 @@ jobs:
           R -e 'install.packages("ggrepel")'
           R -e 'install.packages("ggtext")'
           R -e 'install.packages("glue")'
-          R -e 'install.packages("httr2")'
+          R -e 'install.packages("here")'
           R -e 'install.packages("rtweet")'
           R -e 'install.packages("scales")'
           R -e 'install.packages("showtext")'
           R -e 'install.packages("tidyverse")'
-          R -e 'install.packages("xml2")'
       - name: Rscript
         run: Rscript bot_script_province.R
         env:
