@@ -54,7 +54,9 @@ df <-
   ) |> 
   rowwise() |> 
   filter(between(price, c1, c99)) |> 
-  ungroup() |> 
+  ungroup()
+
+df <- df |> 
   mutate(dateupdated = if_else(dateupdated == Sys.Date() - 1, "yesterday", "daybefore")) |> 
   group_by(County, fuel, dateupdated) |> 
   summarise(price_avg = mean(price, na.rm = TRUE)) |> 
