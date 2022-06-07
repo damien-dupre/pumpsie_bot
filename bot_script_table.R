@@ -4,7 +4,6 @@ library(glue)
 library(gt)
 library(here)
 library(rtweet)
-library(scales)
 library(tidyverse)
 
 # options in -------------------------------------------------------------------
