@@ -9,6 +9,7 @@ library(webshot)
 
 # options in -------------------------------------------------------------------
 options(encoding = "windows-1252")
+install_phantomjs()
 
 # twitter ----------------------------------------------------------------------
 # bot_token <-
