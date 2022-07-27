@@ -73,4 +73,4 @@ df <- data_latest |>
   glue_data("In Co. #{county}, {Petrol} and {Diesel} have been reported yesterday") |> 
   paste(collapse = "\n") |> 
   paste(" #Ireland", sep = "\n") |> 
-  post_tweet(token = bot_token)
+  post_tweet(token = bot_token, media_alt_text = "")

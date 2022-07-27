@@ -12,14 +12,17 @@ options(encoding = "windows-1252")
 install_phantomjs()
 
 # twitter ----------------------------------------------------------------------
-# bot_token <-
-# rtweet::create_token(
-#   app = "pumpsie_bot",
-#   consumer_key = config::get("pumpsie_bot")$api_key,
-#   consumer_secret = config::get("pumpsie_bot")$api_key_secret,
-#   access_token = config::get("pumpsie_bot")$access_token,
-#   access_secret = config::get("pumpsie_bot")$access_token_secret
-# )
+# auth <- rtweet_bot()
+# auth_save(auth, "bot_token")
+# auth_as("bot_token")
+bot_token <-
+rtweet::create_token(
+  app = "pumpsie_bot",
+  consumer_key = config::get("pumpsie_bot")$api_key,
+  consumer_secret = config::get("pumpsie_bot")$api_key_secret,
+  access_token = config::get("pumpsie_bot")$access_token,
+  access_secret = config::get("pumpsie_bot")$access_token_secret
+)
 
 bot_token <- 
   create_token(
@@ -134,7 +137,7 @@ df |>
   gtsave("pumps.png")
 
 # tweet ------------------------------------------------------------------------
-post_tweet(glue("Average fuel prices reported on pumps.ie yesterday. #Ireland #Petrol #Diesel #FuelPrice"), media = "pumps.png", token = bot_token)
+post_tweet(glue("Average fuel prices reported on pumps.ie yesterday. #Ireland #Petrol #Diesel #FuelPrice"), media = "pumps.png", token = bot_token, media_alt_text = "")
 
 # options out ------------------------------------------------------------------
 unlink("pumps.png")

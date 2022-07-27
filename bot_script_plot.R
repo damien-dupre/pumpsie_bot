@@ -118,7 +118,7 @@ df |>
 ggsave("pumps.png", width = 8, height = 4)
 
 # tweet ------------------------------------------------------------------------
-post_tweet(glue("Fluctuation of fuel prices reported on pumps.ie in #{province_title} for the last 2 weeks. #Ireland #Petrol #Diesel #FuelPrice"), media = "pumps.png", token = bot_token)
+post_tweet(glue("Fluctuation of fuel prices reported on pumps.ie in #{province_title} for the last 2 weeks. #Ireland #Petrol #Diesel #FuelPrice"), media = "pumps.png", token = bot_token, media_alt_text = "")
 
 # options out ------------------------------------------------------------------
 unlink("pumps.png")
