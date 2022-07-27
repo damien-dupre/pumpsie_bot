@@ -15,14 +15,14 @@ install_phantomjs()
 # auth <- rtweet_bot()
 # auth_save(auth, "bot_token")
 # auth_as("bot_token")
-bot_token <-
-rtweet::create_token(
-  app = "pumpsie_bot",
-  consumer_key = config::get("pumpsie_bot")$api_key,
-  consumer_secret = config::get("pumpsie_bot")$api_key_secret,
-  access_token = config::get("pumpsie_bot")$access_token,
-  access_secret = config::get("pumpsie_bot")$access_token_secret
-)
+# bot_token <-
+# rtweet::create_token(
+#   app = "pumpsie_bot",
+#   consumer_key = config::get("pumpsie_bot")$api_key,
+#   consumer_secret = config::get("pumpsie_bot")$api_key_secret,
+#   access_token = config::get("pumpsie_bot")$access_token,
+#   access_secret = config::get("pumpsie_bot")$access_token_secret
+# )
 
 bot_token <- 
   create_token(
