@@ -9,7 +9,7 @@ library(webshot2)
 
 # options in -------------------------------------------------------------------
 options(encoding = "windows-1252")
-install_phantomjs()
+# install_phantomjs()
 
 # twitter ----------------------------------------------------------------------
 # auth <- rtweet_bot()
