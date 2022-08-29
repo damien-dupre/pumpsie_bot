@@ -5,7 +5,7 @@ library(gt)
 library(here)
 library(rtweet)
 library(tidyverse)
-library(webshot)
+library(webshot2)
 
 # options in -------------------------------------------------------------------
 options(encoding = "windows-1252")

@@ -21,7 +21,7 @@ jobs:
           R -e 'install.packages("here")'
           R -e 'install.packages("rtweet")'
           R -e 'install.packages("tidyverse")'
-          R -e 'install.packages("webshot")'
+          R -e 'install.packages("webshot2")'
       - name: Rscript
         run: Rscript bot_script_table.R
         env:
