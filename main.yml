@@ -1,0 +1,29 @@
+name: pumpsie_bot
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 10 * * *'
+
+
+jobs:
+  pumpsie_bot-post:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+      - name: Install packages
+        run: |
+          R -e 'install.packages("bskyr")'
+          R -e 'install.packages("glue")'
+          R -e 'install.packages("here")'
+          R -e 'install.packages("scales")'
+          R -e 'install.packages("tidyverse")'
+
+      - name: Rscript
+        run: Rscript bot_script_post.R
+        env:
+          BLUESKY_APP_USER: ${{ secrets.BLUESKY_APP_USER }}
+          BLUESKY_APP_PASS: ${{ secrets.BLUESKY_APP_PASS }}
