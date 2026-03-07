@@ -5,7 +5,6 @@ on:
   schedule:
     - cron:  '0 15 * * 1'
 
-
 jobs:
   pumpsie_bot-post:
     runs-on: macos-latest
