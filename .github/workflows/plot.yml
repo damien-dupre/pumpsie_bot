@@ -24,6 +24,7 @@ jobs:
           R -e 'install.packages("scales")'
           R -e 'install.packages("showtext")'
           R -e 'install.packages("tidyverse")'
+          R -e 'install.packages("tidyquant")'
       - name: Rscript
         run: Rscript bot_script_plot.R
         env:
